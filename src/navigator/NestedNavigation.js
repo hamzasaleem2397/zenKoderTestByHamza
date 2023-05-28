@@ -20,7 +20,7 @@ const BottomTab = navigation => {
   // const color = useSelector(state => state.color.colorTheme);
   const defaultTabNavOptions = {
     tabBarStyle: {
-      backgroundColor: Colors.background,
+      backgroundColor: Colors.secondary,
       height: verticalScale(60),
       // position: 'absolute',
       //color you want to change

@@ -90,5 +90,6 @@ export const Logout = user => {
     } catch (error) {
       console.log(error);
     }
+    dispatch({type: AUTH_LOADING, payload: false});
   };
 };
