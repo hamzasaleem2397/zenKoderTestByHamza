@@ -17,9 +17,17 @@ import Input from '../../components/inputField/Input';
 import {useForm} from 'react-hook-form';
 import CustomButton from '../../components/buttons/CustomButton';
 import AlreadyTextContainer from '../../components/commons/AlreadyTextContauner';
+import {useDispatch, useSelector} from 'react-redux';
+import {loginIN} from '../../redux/action/AuthAction';
+import ErrorText from '../../components/commons/ErrorText';
 const ScreenHeight = Dimensions.get('screen').height;
 const LoginScreen = ({navigation}) => {
   const [selectedField, setSelectedField] = useState('');
+  const dispatch = useDispatch();
+  const {authLoading} = useSelector(state => state.auth);
+  const Login = data => {
+    dispatch(loginIN(data));
+  };
   const {
     control,
     handleSubmit,
@@ -79,17 +87,19 @@ const LoginScreen = ({navigation}) => {
             }
             rules={{
               required: 'Password is required',
-              pattern: {
-                value: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
-                message: 'Enter a valid email',
+              minLength: {
+                value: 8,
+                message: 'Too short minimum length is 8',
+              },
+              maxLength: {
+                value: 16,
+                message: 'Password maximum length is 16',
               },
             }}
             // style={{marginTop: 20}}
             placeholder="Enter Your Password"
           />
-          {errors.email && (
-            <Text style={styles.errormessage}>{errors.email.message}</Text>
-          )}
+          {errors.password && <ErrorText text={errors.password.message} />}
 
           <AlreadyTextContainer
             firstText={"Doesn't have a Account"}
@@ -101,7 +111,9 @@ const LoginScreen = ({navigation}) => {
 
           <CustomButton
             title={'Login'}
-            marginTop={verticalScale(20)}
+            loading={authLoading}
+            onPress={handleSubmit(Login)}
+            marginTop={verticalScale(30)}
             marginBottom={verticalScale(40)}
           />
         </ScrollView>

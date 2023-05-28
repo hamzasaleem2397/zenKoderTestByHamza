@@ -9,11 +9,6 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
-
-import {AUTH_LOADING, ERROR, USER_DETAILS} from '../reducers/AuthReducer';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import React, {useState} from 'react';
 import {Colors} from '../../constants/Colors';
@@ -24,42 +19,16 @@ import {useForm} from 'react-hook-form';
 import CustomButton from '../../components/buttons/CustomButton';
 import AlreadyTextContainer from '../../components/commons/AlreadyTextContauner';
 import ErrorText from '../../components/commons/ErrorText';
+import {useDispatch} from 'react-redux';
+import {SignupUser} from '../../redux/action/AuthAction';
 const ScreenHeight = Dimensions.get('screen').height;
 
 const RegistrationScreen = () => {
   const [selectedField, setSelectedField] = useState('');
-  const SignupUser = () => {
-    return async dispatch => {
-      auth()
-        .createUserWithEmailAndPassword('Static@gmail.com', '11111111')
-        .then(res => {
-          console.log('res.user.uid : ', res.user.uid);
-          if ('Users' != res.user.uid) {
-            firestore().collection('Users').doc(res.user.uid).set({
-              USER_ID: res.user.uid,
-              NAME: 'static',
-              EMAIL: 'Static@gmail.com',
-            });
-            const userDetails = {
-              USER_ID: res.user.uid,
-              NAME: 'static',
-              EMAIL: 'Static@gmail.com',
-              LOCATION: 'staticlo',
-            };
-            console.log(userDetails);
-          }
-        })
-        .catch(error => {
-          console.log(error);
-          if (error.code === 'auth/email-already-in-use') {
-            alert('That email address is already in use!');
-          }
-          if (error.code === 'auth/invalid-email') {
-            alert('That email address is invalid!');
-          }
-          dispatch({type: AUTH_LOADING, payload: false});
-        });
-    };
+  const dispatch = useDispatch();
+  const registration = data => {
+    console.log(data);
+    // dispatch(SignupUser(data));
   };
   const {
     control,
@@ -187,7 +156,7 @@ const RegistrationScreen = () => {
           />
           <CustomButton
             title={'Signup'}
-            onPress={() => SignupUser()}
+            onPress={handleSubmit(registration)}
             marginTop={verticalScale(20)}
             marginBottom={verticalScale(30)}
           />
