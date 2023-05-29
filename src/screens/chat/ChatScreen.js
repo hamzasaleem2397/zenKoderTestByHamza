@@ -19,7 +19,7 @@ const ChatScreen = ({route}) => {
   useEffect(() => {
     dispatch(getMessage(authDetails.USER_ID, userId));
   }, [userId]);
-
+  console.log('chatsss', chats);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.nameContainer}>
@@ -27,13 +27,13 @@ const ChatScreen = ({route}) => {
       </View>
 
       <FlatList
-        data={messages}
+        data={chats}
         renderItem={({item}) => {
           return (
             <ChatContainer
-              message={item.message}
-              time={item.date}
-              senderType={item.sender}
+              message={item.TEXT}
+              time={item.CREATED_AT}
+              userId={item.USER_ID}
               messageType={true}
             />
           );

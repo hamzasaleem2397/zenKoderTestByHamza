@@ -36,7 +36,6 @@ export const getChat = authId => {
         .doc(authId)
         .get();
 
-      console.log(chatDetails.data().partiesInfo);
       if (!chatDetails.data()) {
         throw new Error('no Chat Data');
       }
@@ -53,15 +52,18 @@ export const getMessage = (authId, otherUserId) => {
         .collection('conversation')
         .doc(authId)
         .collection('messages')
+        .doc(otherUserId)
+        .collection('message')
         .onSnapshot(snapShot => {
           let chats = [];
+          console.log('shnccc', snapShot);
           firestore()
             .collection('conversation')
             .doc(authId)
             .collection('messages')
             .doc(otherUserId)
             .collection('message')
-            .orderBy('CREATED_AT', 'desc')
+            // .orderBy('CREATED_AT', 'desc')
             .get()
             .then(querySnapShot => {
               querySnapShot.forEach(documentSnapShot => {
@@ -104,7 +106,7 @@ export const sendMessages = (authUser, otherUserId, textInput) => {
           USER_ID: authUser.USER_ID,
           EMAIL: authUser.EMAIL,
           TEXT: textInput,
-          CREATED_AT: Date.now,
+          CREATED_AT: new Date(),
         });
     } catch (error) {
       alert(error);
