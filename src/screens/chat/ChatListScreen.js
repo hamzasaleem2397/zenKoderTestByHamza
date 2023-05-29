@@ -17,20 +17,21 @@ const ChatListScreen = ({navigation}) => {
   useEffect(() => {
     dispatch(getChat(authDetails.USER_ID));
   }, []);
-  console.log('chatttt', chatList);
+  console.log('chatttt====>', chatList);
   return (
     <View style={styles.container}>
       <AddChatModal
         visible={modalVisible}
         onBackButtonPress={() => setModalVisible(false)}
         onBackdropPress={() => setModalVisible(false)}
+        setModalVisible={setModalVisible}
       />
       <FlatList
         data={chatList}
         renderItem={({item}) => {
           const [userId, userInfo] = Object.entries(item)[0];
           const name = userInfo.name;
-          console.log(userId);
+          console.log('otheruser', userId);
           return (
             <MessageListContainer
               onPress={() => navigation.navigate('chat', {userId, name})}

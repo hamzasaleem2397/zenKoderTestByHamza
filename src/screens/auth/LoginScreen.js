@@ -72,9 +72,7 @@ const LoginScreen = ({navigation}) => {
             // style={{marginTop: 20}}
             placeholder="Enter Your Email"
           />
-          {errors.email && (
-            <Text style={styles.errormessage}>{errors.email.message}</Text>
-          )}
+          {errors.email && <ErrorText text={errors.email.message} />}
           <Input
             name="password"
             inputLabel="Password"

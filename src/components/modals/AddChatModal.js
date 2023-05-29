@@ -8,11 +8,16 @@ import CustomButton from '../buttons/CustomButton';
 import Input from '../inputField/Input';
 import {useForm} from 'react-hook-form';
 import {useDispatch, useSelector} from 'react-redux';
-import {AddChat} from '../../redux/action/ChatActions';
+import {AddChat, getChat} from '../../redux/action/ChatActions';
 import ErrorText from '../commons/ErrorText';
 // import {Colors} from '../../constant/Colors';
 
-const AddChatModal = ({visible, onBackButtonPress, onBackdropPress, title}) => {
+const AddChatModal = ({
+  visible,
+  onBackButtonPress,
+  onBackdropPress,
+  setModalVisible,
+}) => {
   const dispatch = useDispatch();
   const {
     control,
@@ -24,7 +29,9 @@ const AddChatModal = ({visible, onBackButtonPress, onBackdropPress, title}) => {
   });
   const {authDetails} = useSelector(state => state.auth);
   const addChatApi = data => {
-    dispatch(AddChat(authDetails.USER_ID, data.userId));
+    dispatch(AddChat(authDetails.USER_ID, data.userId, authDetails.NAME));
+    setModalVisible(false);
+    dispatch(getChat(authDetails.USER_ID));
   };
   return (
     <Modal

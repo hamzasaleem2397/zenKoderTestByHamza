@@ -1,18 +1,18 @@
 import firestore from '@react-native-firebase/firestore';
 import {CHAT, CHAT_LIST} from '../reducers/ChatReducer';
 
-export const AddChat = (authId, userId) => {
+export const AddChat = (authId, userId, name) => {
   return async dispatch => {
     try {
       const userDetail = await firestore()
         .collection('Users')
         .doc(userId)
         .get();
-      console.log(userDetail.data());
+
       if (!userDetail.data()) {
         throw new Error('doesnt exist');
       }
-      firestore()
+      await firestore()
         .collection('conversation')
         .doc(authId)
         .update({
@@ -22,6 +22,17 @@ export const AddChat = (authId, userId) => {
             name: userDetail.data().NAME,
           },
         });
+      await firestore()
+        .collection('conversation')
+        .doc(userId)
+        .update({
+          [`parties.${authId}`]: authId,
+
+          [`partiesInfo.${authId}`]: {
+            name: name,
+          },
+        });
+      dispatch(getChat(authId));
     } catch (error) {
       alert(error);
     }
@@ -31,15 +42,21 @@ export const AddChat = (authId, userId) => {
 export const getChat = authId => {
   return async dispatch => {
     try {
+      console.log(authId);
       const chatDetails = await firestore()
         .collection('conversation')
         .doc(authId)
         .get();
-
-      if (!chatDetails.data()) {
-        throw new Error('no Chat Data');
+      console.log('==========>', chatDetails.data().partiesInfo);
+      // if (!chatDetails.data()) {
+      //   throw new Error('no Chat Data');
+      // }
+      if (chatDetails.data()) {
+        const dataArray = Object.entries(chatDetails.data().partiesInfo).map(
+          ([key, value]) => ({[key]: value}),
+        );
+        dispatch({type: CHAT_LIST, payload: dataArray});
       }
-      dispatch({type: CHAT_LIST, payload: [chatDetails.data().partiesInfo]});
     } catch (error) {
       alert(error);
     }
@@ -63,11 +80,11 @@ export const getMessage = (authId, otherUserId) => {
             .collection('messages')
             .doc(otherUserId)
             .collection('message')
-            // .orderBy('CREATED_AT', 'desc')
+            .orderBy('CREATED_AT', 'asc')
             .get()
             .then(querySnapShot => {
               querySnapShot.forEach(documentSnapShot => {
-                // console.log(documentSnapShot.data());
+                console.log(documentSnapShot.data());
                 const {USER_ID: user_id, CREATED_AT} = {
                   ...documentSnapShot.data(),
                 };
@@ -104,7 +121,18 @@ export const sendMessages = (authUser, otherUserId, textInput) => {
         .collection('message')
         .add({
           USER_ID: authUser.USER_ID,
-          EMAIL: authUser.EMAIL,
+
+          TEXT: textInput,
+          CREATED_AT: new Date(),
+        });
+      firestore()
+        .collection('conversation')
+        .doc(otherUserId)
+        .collection('messages')
+        .doc(authUser.USER_ID)
+        .collection('message')
+        .add({
+          USER_ID: otherUserId,
           TEXT: textInput,
           CREATED_AT: new Date(),
         });

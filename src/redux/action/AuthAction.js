@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {AUTH_DETAILS, AUTH_LOADING} from '../reducers/AuthReducer';
 export const SignupUser = data => {
   return async dispatch => {
+    dispatch({type: AUTH_LOADING, payload: true});
     auth()
       .createUserWithEmailAndPassword(data.email, data.password)
       .then(res => {
@@ -37,7 +38,8 @@ export const SignupUser = data => {
         if (error.code === 'auth/invalid-email') {
           alert('That email address is invalid!');
         }
-      });
+      })
+      .finally(() => dispatch({type: AUTH_LOADING, payload: false}));
   };
 };
 export const loginIN = user => {

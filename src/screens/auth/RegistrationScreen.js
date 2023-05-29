@@ -19,12 +19,14 @@ import {useForm} from 'react-hook-form';
 import CustomButton from '../../components/buttons/CustomButton';
 import AlreadyTextContainer from '../../components/commons/AlreadyTextContauner';
 import ErrorText from '../../components/commons/ErrorText';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {SignupUser} from '../../redux/action/AuthAction';
 const ScreenHeight = Dimensions.get('screen').height;
 
 const RegistrationScreen = () => {
   const [selectedField, setSelectedField] = useState('');
+  const {authLoading} = useSelector(state => state.auth);
+
   const dispatch = useDispatch();
   const registration = data => {
     // console.log(data);
@@ -146,9 +148,7 @@ const RegistrationScreen = () => {
             placeholder="Enter Your Confrim Password"
           />
           {errors.confirmPassword && (
-            <Text style={styles.errormessage}>
-              {errors.confirmPassword.message}
-            </Text>
+            <ErrorText text={errors.confirmPassword.message} />
           )}
           <AlreadyTextContainer
             firstText={"Doesn't have a Account"}
@@ -157,6 +157,7 @@ const RegistrationScreen = () => {
           <CustomButton
             title={'Signup'}
             onPress={handleSubmit(registration)}
+            loading={authLoading}
             marginTop={verticalScale(20)}
             marginBottom={verticalScale(30)}
           />

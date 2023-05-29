@@ -10,7 +10,7 @@ import {useSelector} from 'react-redux';
 const ChatContainer = ({message, time, userId}) => {
   // const senderType=
   const {authDetails} = useSelector(state => state.auth);
-  console.log(authDetails);
+
   return (
     <View>
       {/* {setMessageType(type)} */}
@@ -21,7 +21,7 @@ const ChatContainer = ({message, time, userId}) => {
           style={styles.imageStyle(userId, authDetails.USER_ID)}
         />
 
-        <View style={styles.message(userId)}>
+        <View style={styles.message(userId, authDetails.USER_ID)}>
           <Text style={[TextStyles.subTitle(Colors.text)]}>{message}</Text>
           <Text
             style={[
@@ -38,7 +38,7 @@ const ChatContainer = ({message, time, userId}) => {
 
 const styles = StyleSheet.create({
   conatiner: (authId, userID) => ({
-    flexDirection: authId == userID ? 'row' : 'row-reverse',
+    flexDirection: authId != userID ? 'row' : 'row-reverse',
     paddingVertical: verticalScale(10),
     alignItems: 'center',
   }),
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     aspectRatio: 1 / 1,
     // marginTop: verticalScale(12),
     marginLeft: scale(10),
-    marginRight: authId != userID ? scale(15) : scale(0),
+    marginRight: authId == userID ? scale(15) : scale(0),
     alignItems: 'center',
   }),
 
