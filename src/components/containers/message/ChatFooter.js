@@ -1,28 +1,44 @@
 import {StyleSheet, Text, View, TextInput} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 
 import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
 import Icons from '../../commons/Icon';
 import {Colors} from '../../../constants/Colors';
+import {useDispatch, useSelector} from 'react-redux';
+import {sendMessages} from '../../../redux/action/ChatActions';
 
-const ChatFooter = () => {
+const ChatFooter = ({otherUserId}) => {
+  const [chat, setChat] = useState('');
+  const {authDetails} = useSelector(state => state.auth);
+  const dispatch = useDispatch();
+
+  const sendChatApi = () => {
+    dispatch(sendMessages(authDetails, otherUserId, chat));
+    console.log(otherUserId);
+    console.log('setChat', chat);
+  };
   return (
     <View style={styles.footerContaier}>
       <View style={styles.footChildContainer}>
         <Icons type={'Feather'} name={'camera'} size={30} color={'white'} />
         <TextInput
           placeholder="Message"
+          value={chat}
+          onChangeText={item => setChat(item)}
           placeholderTextColor={Colors.primary}
           style={styles.textInput}
           multiline
         />
-        <Icons
-          type="FontAwesome"
-          name="send"
-          size={moderateScale(26)}
-          color={'white'}
-          style={{marginLeft: scale(5)}}
-        />
+        {chat && (
+          <Icons
+            type="FontAwesome"
+            name="send"
+            size={moderateScale(26)}
+            color={'white'}
+            onPress={() => sendChatApi()}
+            style={{marginLeft: scale(5)}}
+          />
+        )}
       </View>
     </View>
   );

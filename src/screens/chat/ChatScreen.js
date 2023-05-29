@@ -1,17 +1,29 @@
 import {FlatList, SafeAreaView, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Colors} from '../../constants/Colors';
 import {verticalScale} from 'react-native-size-matters';
 import {TextStyles} from '../../constants/TextStyle';
 import ChatContainer from '../../components/containers/message/ChatContainer';
 import {messages} from '../../constants/StaticData';
 import ChatFooter from '../../components/containers/message/ChatFooter';
+import {useDispatch, useSelector} from 'react-redux';
+import {getMessage} from '../../redux/action/ChatActions';
 
-const ChatScreen = () => {
+const ChatScreen = ({route}) => {
+  const {userId, name} = route.params;
+  const {authDetails} = useSelector(state => state.auth);
+  const {chats} = useSelector(state => state.chat);
+
+  console.log('aaaa', userId);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getMessage(authDetails.USER_ID, userId));
+  }, [userId]);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.nameContainer}>
-        <Text style={TextStyles.title(Colors.background)}>Joun Sameer</Text>
+        <Text style={TextStyles.title(Colors.background)}>{name}</Text>
       </View>
 
       <FlatList
@@ -29,7 +41,7 @@ const ChatScreen = () => {
         keyExtractor={item => item.id}
         showsVerticalScrollIndicator={true}
       />
-      <ChatFooter />
+      <ChatFooter otherUserId={userId} />
     </SafeAreaView>
   );
 };
