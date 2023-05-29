@@ -1,5 +1,5 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import Modal from 'react-native-modal';
 
 import {scale, moderateScale, verticalScale} from 'react-native-size-matters';
@@ -7,9 +7,13 @@ import {Colors} from '../../constants/Colors';
 import CustomButton from '../buttons/CustomButton';
 import Input from '../inputField/Input';
 import {useForm} from 'react-hook-form';
+import {useDispatch, useSelector} from 'react-redux';
+import {AddChat} from '../../redux/action/ChatActions';
+import ErrorText from '../commons/ErrorText';
 // import {Colors} from '../../constant/Colors';
 
 const AddChatModal = ({visible, onBackButtonPress, onBackdropPress, title}) => {
+  const dispatch = useDispatch();
   const {
     control,
     handleSubmit,
@@ -18,6 +22,10 @@ const AddChatModal = ({visible, onBackButtonPress, onBackdropPress, title}) => {
   } = useForm({
     mode: 'all',
   });
+  const {authDetails} = useSelector(state => state.auth);
+  const addChatApi = data => {
+    dispatch(AddChat(authDetails.USER_ID, data.userId));
+  };
   return (
     <Modal
       style={styles.modalContainer}
@@ -26,20 +34,22 @@ const AddChatModal = ({visible, onBackButtonPress, onBackdropPress, title}) => {
       onBackdropPress={onBackdropPress}>
       <View style={styles.taskCardContainer}>
         <Input
-          name="email"
+          name="userId"
           inputLabel="User ID"
           control={control}
           borderColor={Colors.primary}
           rules={{
-            required: 'email is required',
+            required: 'UserId is required',
           }}
           // style={{marginTop: 20}}
           placeholder="Enter User Id"
         />
-        {errors.email && (
-          <Text style={styles.errormessage}>{errors.email.message}</Text>
-        )}
-        <CustomButton title={'Add user'} marginBottom={verticalScale(15)} />
+        {errors.userId && <ErrorText text={errors.userId.message} />}
+        <CustomButton
+          title={'Add user'}
+          marginBottom={verticalScale(15)}
+          onPress={handleSubmit(addChatApi)}
+        />
       </View>
     </Modal>
   );

@@ -20,6 +20,11 @@ export const SignupUser = data => {
             NAME: data.name,
             EMAIL: data.email,
           };
+          firestore()
+            .collection('conversation')
+            .doc(userDetails.USER_ID)
+            .set({parties: [], partiesInfo: []});
+
           dispatch({type: AUTH_DETAILS, payload: userDetails});
           AsyncStorage.setItem('userDetails', JSON.stringify(userDetails));
         }

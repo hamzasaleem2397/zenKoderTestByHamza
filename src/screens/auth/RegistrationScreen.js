@@ -27,8 +27,8 @@ const RegistrationScreen = () => {
   const [selectedField, setSelectedField] = useState('');
   const dispatch = useDispatch();
   const registration = data => {
-    console.log(data);
-    // dispatch(SignupUser(data));
+    // console.log(data);
+    dispatch(SignupUser(data));
   };
   const {
     control,

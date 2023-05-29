@@ -10,14 +10,15 @@ import {useDispatch, useSelector} from 'react-redux';
 const ProfileScreen = () => {
   const dispatch = useDispatch();
   const {authLoading} = useSelector(state => state.auth);
+  const userDetails = useSelector(state => state.auth.authDetails);
 
   return (
     <View style={styles.container}>
       <Text style={TextStyles.title(Colors.primary, moderateScale(24))}>
-        name:Hamza
+        name:{userDetails.NAME}
       </Text>
       <Text style={TextStyles.title(Colors.primary, moderateScale(24))}>
-        Email:Hamza
+        Email:{userDetails.EMAIL}
       </Text>
       <CustomButton
         title={'Logout'}
