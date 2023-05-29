@@ -113,7 +113,8 @@ export const getMessage = (authId, otherUserId) => {
 export const sendMessages = (authUser, otherUserId, textInput) => {
   return async dispatch => {
     try {
-      firestore()
+      console.log('aaaa', authUser.USER_ID);
+      await firestore()
         .collection('conversation')
         .doc(authUser.USER_ID)
         .collection('messages')
@@ -121,18 +122,17 @@ export const sendMessages = (authUser, otherUserId, textInput) => {
         .collection('message')
         .add({
           USER_ID: authUser.USER_ID,
-
           TEXT: textInput,
           CREATED_AT: new Date(),
         });
-      firestore()
+      await firestore()
         .collection('conversation')
         .doc(otherUserId)
         .collection('messages')
         .doc(authUser.USER_ID)
         .collection('message')
         .add({
-          USER_ID: otherUserId,
+          USER_ID: authUser.USER_ID,
           TEXT: textInput,
           CREATED_AT: new Date(),
         });

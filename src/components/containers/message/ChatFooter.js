@@ -14,6 +14,7 @@ const ChatFooter = ({otherUserId}) => {
 
   const sendChatApi = () => {
     dispatch(sendMessages(authDetails, otherUserId, chat));
+    setChat('');
     console.log(otherUserId);
     console.log('setChat', chat);
   };

@@ -10,7 +10,8 @@ import {useSelector} from 'react-redux';
 const ChatContainer = ({message, time, userId}) => {
   // const senderType=
   const {authDetails} = useSelector(state => state.auth);
-
+  console.log(authDetails.USER_ID);
+  console.log(userId);
   return (
     <View>
       {/* {setMessageType(type)} */}
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
   }),
 
   message: (authId, userID) => ({
-    backgroundColor: authId == userID ? Colors.secondary : Colors.primary,
+    backgroundColor: authId != userID ? Colors.secondary : Colors.primary,
 
     width: '80%',
     marginLeft: scale(12),

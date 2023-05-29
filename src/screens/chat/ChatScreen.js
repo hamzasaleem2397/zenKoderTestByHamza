@@ -14,7 +14,7 @@ const ChatScreen = ({route}) => {
   const {authDetails} = useSelector(state => state.auth);
   const {chats} = useSelector(state => state.chat);
 
-  console.log('aaaa', userId);
+  console.log('aaaa', authDetails);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getMessage(authDetails.USER_ID, userId));
